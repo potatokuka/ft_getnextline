@@ -1,0 +1,72 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   get_next_line_utils.c                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: greed <greed@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2019/11/26 11:35:44 by greed          #+#    #+#                */
+/*   Updated: 2019/11/26 18:39:14 by greed         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <errno.h>
+#include "get_next_line.h"
+#include <stdio.h>
+
+char	*ft_strdup(const char *s1)
+{
+	unsigned char	*block;
+	int				len;
+	int				i;
+	char			*str;
+
+	len = 0;
+	i = 0;
+	while (s1[len])
+		len++;
+	block = (unsigned char*)malloc(len + 1);
+	if (!(block))
+		ENOMEM;
+	else
+	{
+		str = (char*)malloc(len + 1);
+		while (s1[i])
+		{
+			str[i] = s1[i];
+			i++;
+		}
+		str[i] = '\0';
+		return (str);
+	}
+	return (0);
+}
+
+size_t		ft_strlen(const char *s)
+{
+	size_t i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize)
+{
+	int i;
+
+	i = 0;
+	if (!(src))
+		return (0);
+	while (src[i] && i < (int)dstsize - 1)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	if (dstsize)
+		dst[i] = '\0';
+	while (src[i] != '\0')
+		i++;
+	return (i);
+}
