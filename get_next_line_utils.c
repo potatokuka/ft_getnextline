@@ -6,7 +6,7 @@
 /*   By: greed <greed@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 11:35:44 by greed          #+#    #+#                */
-/*   Updated: 2019/11/26 18:39:14 by greed         ########   odam.nl         */
+/*   Updated: 2019/11/27 16:27:37 by greed         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(char *s1)
 {
 	unsigned char	*block;
 	int				len;
@@ -42,17 +42,18 @@ char	*ft_strdup(const char *s1)
 	return (0);
 }
 
-size_t		ft_strlen(const char *s)
+size_t		ft_strlen(char *s, int c)
 {
 	size_t i;
 
 	i = 0;
-	while (s[i])
+	while (s[i] != c || s[i] != '\0')
 		i++;
+	// printf("%zu", i);
 	return (i);
 }
 
-size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize)
+size_t		ft_strlcpy(char *dst, char *src, size_t dstsize)
 {
 	int i;
 

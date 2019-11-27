@@ -6,7 +6,7 @@
 /*   By: greed <greed@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 11:35:30 by greed          #+#    #+#                */
-/*   Updated: 2019/11/26 18:45:22 by greed         ########   odam.nl         */
+/*   Updated: 2019/11/27 16:31:03 by greed         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,17 @@
 #  define BUFFER_SIZE	32
 # endif
 
+// typedef struct		s_read
+// {
+// 	int	has;
+// }					t_read;
+
 int		ft_strchr(char *s, int c);
-char	*ft_strdup(const char *src);
-size_t	ft_strlen(const char *s);
-char	*ft_substr(const char *s, unsigned int start, size_t len);
+char	*ft_strdup(char *src);
+size_t	ft_strlen(char *s, int c);
+char	*ft_substr(char *s, unsigned int start, size_t len);
 char	*ft_strjoin(char *s1, char *s2);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+size_t	ft_strlcpy(char *dst, char *src, size_t dstsize);
 int		get_next_line(int fd, char **line);
-int		pull_line(char *get, char **line, int c);
+int		pull_line(char **get, char **line, int c);
 #endif

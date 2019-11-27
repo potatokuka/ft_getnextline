@@ -6,7 +6,7 @@
 /*   By: greed <greed@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 11:34:21 by greed          #+#    #+#                */
-/*   Updated: 2019/11/26 18:45:45 by greed         ########   odam.nl         */
+/*   Updated: 2019/11/27 16:49:23 by greed         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,63 +15,41 @@
 #include <stdio.h>
 #include <errno.h>
 
-// read at fd, malloc buff size + 1
-// read FD until '\n', store the pointer from the end
-// set tmp point to a, b is the char after the new line
-// keep reading until the end of the file?
-
-int		pull_line(char *get, char **line, int c)
+int		pull_line(char **get, char **line, int c)
 {
 	char			*temp;
 
-	printf("NL _%d_%zu_\n", c, ft_strchr(get, c));
-	*line = ft_substr(get, 0, ft_strchr(get, c));
+	// printf("NL _%d_%d_\n", c, ft_strchr(*get, c));
+	*line = ft_substr(*get, 0, ft_strchr(*get, c));
 	if (c == '\0')
 	{
-		free(get);
+		free(*get);
 		return (0);
 	}
-	temp = ft_substr(get, ft_strchr(get, c) + 1,
-		ft_strlen(get) - ft_strchr(get, c));
-	free(get);
-	get = temp;
+	temp = ft_substr(*get, ft_strchr(*get, c) + 1,
+		ft_strlen(*get, c) - ft_strchr(*get, c));
+	free(*get);
+	*get = temp;
 	return (1);
 }
-//  strjoin & strdup
-// substr
 
-// int		*ft_strchr(char *s, int c)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while (s[i])
-// 	{
-// 		if (s[i] == (char)c)
-// 			return ((char*)&s[i]);
-// 		i++;
-// 	}
-// 	if (s[i] == (char)(c))
-// 		return ((char*)&s[i]);
-// 	return (NULL);
-// }
 int		ft_strchr(char *s, int c)
 {
 	size_t	i;
-	printf("INSIDE ME");
+
 	i = 0;
 	while (s[i])
 	{
 		if (s[i] == c)
-			return (i);
+			return (i + 1);
 		i++;
 	}
 	if (!c)
-		return (i);
+		return (i - 1);
 	return (0);
 }
 
-char		*ft_substr(char const *s, unsigned int start, size_t len)
+char		*ft_substr(char *s, unsigned int start, size_t len)
 {
 	size_t				i;
 	char				*dst;
@@ -80,7 +58,7 @@ char		*ft_substr(char const *s, unsigned int start, size_t len)
 	i = 0;
 	if (!(s))
 		return (NULL);
-	tmp = ft_strlen(s);
+	tmp = ft_strchr(s, '\n');
 	if (start > tmp)
 		return (ft_strdup(""));
 	dst = (char*)malloc(len + 1);
@@ -104,9 +82,13 @@ char		*ft_strjoin(char *s1, char *s2)
 	int		i;
 
 	if (!s1 || !s2)
+	{
 		return (NULL);
-	l1 = ft_strlen(s1);
-	l2 = ft_strlen(s2);
+	}
+	l1 = ft_strchr(s1, '\n');
+	l2 = ft_strchr(s2, '\n');
+	// printf("GET%s\n", s1);
+	// printf("HOLD%s\n", s2);
 	res = (char*)malloc(sizeof(char) * (l1 + l2 + 1));
 	if (!res)
 		return (NULL);
@@ -125,36 +107,38 @@ char		*ft_strjoin(char *s1, char *s2)
 
 int		get_next_line(int fd, char **line)
 {
-	static char 		*get;
-	char 				*tmp;
-	char 				*hold[BUFFER_SIZE];
-	size_t				readsize;
+	static char			*get;
+	char				*tmp;
+	char				hold[BUFFER_SIZE];
+	size_t				readl;
+	int					has;
 
+	has = 0;
 	if (!get)
 	{
-		get = (char*)malloc(sizeof(BUFFER_SIZE) + 1);
+		get = (char*)malloc(sizeof(char));
 		get[0] = '\0';
-		// ft_strdup src into dst?
-		// move temp point to the start of original src start point
 	}
-	readsize = 1;
-	printf("DONE");
-	while (readsize && !ft_strchr(get, '\n'))
+	readl = 1;
+	while (readl /* && !ft_strchr(get, '\n')*/)
 	{
-		readsize = read(fd, hold, BUFFER_SIZE - 1);
-		hold[readsize] = '\0';
-		if (!readsize)
+		readl = read(fd, hold, BUFFER_SIZE - 1);
+		hold[readl] = 0;
+		printf("%s", hold);
+		if (!readl)
 			break ;
+		// printf("PRE TEMP _%zu_%s_\n", readl, hold);
 		tmp = ft_strjoin(get, hold);
+		// printf("TMP%s\n", tmp);
+		// printf("TEMP _%zu_%s_\n", readl, tmp);
 		free(get);
 		get = tmp;
-		printf("BUF _%zu_%s_\n", readsize, hold);
-		printf("GET _%d_%s-\n", ft_strchr(get, '\n'), get);
-		printf("DONE");
+		// printf("BUF _%zu_%s_\n", readl, hold);
+		// printf("GET _%d_%s-\n", ft_strchr(get, '\n'), get);
 	}
-	printf("\nREADSIZE _%zu_\n", readsize);
-	if (readsize)
-		return (pull_line(get, line, '\n'));
+	// printf("\nREADSIZE _%zu_\n", readl);
+	if (readl)
+		return (pull_line(&get, line, '\n'));
 	else
-		return (pull_line(get, line, '\0'));
+		return (pull_line(&get, line, '\0'));
 }
