@@ -6,7 +6,7 @@
 /*   By: greed <greed@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 11:35:44 by greed          #+#    #+#                */
-/*   Updated: 2019/11/27 16:27:37 by greed         ########   odam.nl         */
+/*   Updated: 2019/11/28 12:00:14 by greed         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ char	*ft_strdup(char *s1)
 	return (0);
 }
 
-size_t		ft_strlen(char *s, int c)
+size_t		ft_strlen(char *s)
 {
 	size_t i;
 
 	i = 0;
-	while (s[i] != c || s[i] != '\0')
+	while (s[i] != '\0')
 		i++;
 	// printf("%zu", i);
 	return (i);
