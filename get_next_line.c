@@ -6,7 +6,7 @@
 /*   By: greed <greed@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/29 20:39:13 by greed          #+#    #+#                */
-/*   Updated: 2019/11/29 20:39:22 by greed         ########   odam.nl         */
+/*   Updated: 2019/11/29 22:12:19 by greed         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,152 +15,116 @@
 #include <stdio.h>
 #include <errno.h>
 
-int		ft_freezer(t_read **get, t_read *grab)
+int		pull_line(char **get, char **line, int c)
 {
-	t_read		*move;
-	// perror("EOF free res");
-	free(grab->og);
-	grab->og = NULL;
-	// printf("MOVE_%zu_", move->next);
-	if (*get == grab)
-	{
-		// perror("new1st");
-		*get = grab->next;
-	}
-	else
-	{
-		// perror("move next");
-		move = *get;
-		while (move && move->next != grab)
-		{
-			move = move->next;
-			// perror("am im here?");
-			move->next = grab->next;
-		}
-	}
-	// perror("free fin");
-	free(grab);
-	grab = NULL;
-	return (0);
-}
+	char			*temp;
 
-int		pull_line(t_read **get, t_read *grab, char **line, int c)
-{
-	char			*tmp;
-
-	// perror("3");
-	if (line && *line)
-		free(*line);
-	*line = ft_substr(grab, 0, ft_strchr(grab, c));
-	// printf("LINE %s\n", *line);
+	*line = ft_substr(*get, 0, ft_strchr(*get, c) - ((c == '\0') ? - 1 : + 1));
 	if (c == '\0')
 	{
-		// perror("the shitshow starts here");
-		return(ft_freezer(get, grab));
+		free(*get);
+		*get = NULL;
+		return (0);
 	}
-	tmp = ft_substr(grab, ft_strchr(grab, c) +1,
-		grab->len - ft_strchr(grab, c));
-	grab->len -= ft_strchr(grab, c) + 1;
-	free(grab->og);
-	grab->og = tmp;
+	temp = ft_substr(*get, ft_strchr(*get, c),
+		ft_strlen(*get) - ft_strchr(*get, c));
+	free(*get);
+	*get = temp;
 	return (1);
 }
 
-char		*ft_strjoin(t_read *grab, char *s2, size_t readl)
+int		ft_strchr(char *s, int c)
 {
-	char	*res;
 	size_t	i;
 
-	if (!grab->og || !s2)
-		return (NULL);
-	res = (char*)malloc(sizeof(char) * (grab->len + readl + 1));
-	if (!res)
-		return (NULL);
-	res[grab->len + readl] = '\0';
 	i = 0;
-	// printf("strjoin GRAB_len_ %d\n", grab->len);
-	// printf("strjoin readl value_ %d\n", readl);
-	while (i < grab->len || i < readl)
+	while (s[i])
 	{
-		if (i < grab->len)
-			res[i] = grab->og[i];
-		if (i < readl)
-			res[i + grab->len] = s2[i];
+		if (s[i] == c)
+			return (i + 1);
 		i++;
 	}
-	// printf("res_ %s\n", res);
-	// printf("RES HOLD__ %s\n", s2);
+	if (!c)
+		return (i);
+	return (0);
+}
+
+char		*ft_substr(char *s, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	i;
+
+	if (!s)
+		return (NULL);
+	i = 0;
+	while (s[i])
+		i++;
+	if (i < start)
+		return (ft_strjoin("", ""));
+	sub = (char*)malloc(sizeof(char) *
+		((i - start < len) ? i - start : len) + 1);
+	if (!sub)
+		return (NULL);
+	ft_strlcpy(sub, s + start, ((i - start < len) ? i - start : len) + 1);
+	return (sub);
+}
+
+char		*ft_strjoin(char *s1, char *s2)
+{
+	char	*res;
+	int		l1;
+	int		l2;
+	int		i;
+
+	if (!s1 || !s2)
+	{
+		return (NULL);
+	}
+	l1 = ft_strchr(s1, '\0');
+	l2 = ft_strchr(s2, '\0');
+	res = (char*)malloc(sizeof(char) * (l1 + l2 + 1));
+	if (!res)
+		return (NULL);
+	res[l1 + l2] = '\0';
+	i = 0;
+	while (i < l1 || i < l2)
+	{
+		if (i < l1)
+			res[i] = s1[i];
+		if (i < l2)
+			res[i + l1] = s2[i];
+		i++;
+	}
 	return (res);
-}
-
-
-void	get_line(t_read *grab)
-{
-	size_t		readl;
-	char		*tmp;
-	char		hold[BUFFER_SIZE];
-
-	readl = 1;
-	while (readl && ft_strchr(grab, '\n') == -1)
-	{
-		readl = read(grab->fd, hold, BUFFER_SIZE);
-		// printf("HOLD_%d_%s_\n", readl, hold);
-		// hold[readl] = '\0';
-		// perror("2");
-		tmp = ft_strjoin(grab, hold, readl);
-		grab->len += readl;
-		free(grab->og);
-		grab->og = tmp;
-		// printf("OG %s_\n", grab->og);
-	}
-}
-
-t_read	*initiate_file(t_read **leave, int in_fd)
-{
-	t_read		*new_in;
-	t_read		*get;
-
-	get = *leave;
-	while (get && get->next)
-	{
-		if (get->fd == in_fd)
-			return get;
-		get = get->next;
-	}
-	if (get && get->fd == in_fd)
-		return (get);
-	new_in = (t_read*)malloc(sizeof(t_read));
-	if (*leave)
-		get->next = new_in;
-	new_in->len = 0;
-	new_in->fd = in_fd;
-	new_in->next = NULL;
-	new_in->og = (char*)malloc(sizeof(char));
-	new_in->og[0] = '\0';
-	return (new_in);
 }
 
 int		get_next_line(int fd, char **line)
 {
-	static t_read		*get;
-	t_read				*grab;
-	
-	grab = initiate_file(&get, fd);
-	// if (!grab->og)
-	// {
-	// 	grab->og = (char*)malloc(sizeof(char));
-	// 	grab->og[0] = '\0';
-	// }
+	static char			*get;
+	char				*tmp;
+	char				hold[BUFFER_SIZE + 1];
+	size_t				readl;
+	int					has;
+
+	has = 0;
+	if (!get)
+	{
+		get = (char*)malloc(sizeof(char));
+		get[0] = '\0';
+	}
 	if (read(fd, 0, 0) == -1)
 		return (-1);
-	get_line(grab);
-	if (ft_strchr(grab, '\n') != -1)
-		return (pull_line(&get, grab, line, '\n'));
-	else
+	readl = 1;
+	while (readl && !ft_strchr(get, '\n'))
 	{
-		// perror("666");
-		return (pull_line(&get, grab, line, '\0'));
+		readl = read(fd, hold, BUFFER_SIZE);
+		hold[readl] = 0;
+		tmp = ft_strjoin(get, hold);
+		free(get);
+		get = tmp;
 	}
+	if (readl)
+		return (pull_line(&get, line, '\n'));
+	else
+		return (pull_line(&get, line, '\0'));
 }
-
-// it's missing the second to last line

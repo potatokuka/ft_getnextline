@@ -6,7 +6,7 @@
 /*   By: greed <greed@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 11:35:30 by greed          #+#    #+#                */
-/*   Updated: 2019/11/29 18:42:23 by greed         ########   odam.nl         */
+/*   Updated: 2019/11/29 22:13:04 by greed         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ typedef struct		s_read
 	struct s_read	*next;
 }					t_read;
 
-int		ft_strchr(t_read *g, int c);
-char	*ft_strdup(char *src);
+int		ft_strchr(char *s, int c);
+char	*ft_strdup(char *s1);
 size_t	ft_strlen(char *s);
-char	*ft_substr(t_read *grab, unsigned int start, size_t sublen);
-char	*ft_strjoin(t_read *grab, char *s2, size_t readl);
+char	*ft_substr(char *s, unsigned int start, size_t len);
+char	*ft_strjoin(char *s1, char *s2);
 size_t	ft_strlcpy(char *dst, char *src, size_t dstsize);
 int		get_next_line(int fd, char **line);
-int		pull_line(t_read **get, t_read *grab, char **line, int c);
+int		pull_line(char **get, char **line, int c);
 t_read	*initiate_file(t_read **leave, int in_fd);
 void	get_line(t_read *grab);
 int		ft_freezer(t_read **get, t_read *grab);
