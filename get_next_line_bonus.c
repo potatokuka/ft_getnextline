@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   get_next_line.c                                    :+:    :+:            */
+/*   get_next_line_bonus.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: greed <greed@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/29 20:39:13 by greed          #+#    #+#                */
-/*   Updated: 2019/12/01 15:21:59 by greed         ########   odam.nl         */
+/*   Created: 2019/12/01 15:19:42 by greed          #+#    #+#                */
+/*   Updated: 2019/12/01 15:22:24 by greed         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int		pull_line(char **get, char **line, int c)
 {

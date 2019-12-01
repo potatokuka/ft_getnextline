@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   get_next_line_utils.c                              :+:    :+:            */
+/*   get_next_line_utils_bonus.c                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: greed <greed@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/26 11:35:44 by greed          #+#    #+#                */
-/*   Updated: 2019/12/01 14:43:23 by greed         ########   odam.nl         */
+/*   Created: 2019/12/01 15:20:08 by greed          #+#    #+#                */
+/*   Updated: 2019/12/01 15:20:19 by greed         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <errno.h>
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char		*ft_strdup(char *s1)
 {
